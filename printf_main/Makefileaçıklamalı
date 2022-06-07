@@ -1,0 +1,54 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: faozturk <faozturk@42kocaeli.tr>           +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2022/03/04 12:57:10 by faozturk          #+#    #+#              #
+#    Updated: 2022/03/04 14:03:03 by faozturk         ###   ########.tr        #
+#                                                                              #
+# **************************************************************************** #
+
+NAME = libftprintf.a
+INCLUDE = include
+LIBFT = libft
+CC = gcc
+CFLAGS = -Wall -Werror -Wextra
+RM = rm -f
+AR = ar -rcs
+
+SRC = $(wildcard *.c)
+OBJ = $(SRC:.c=.o)
+
+%.o: %.c
+	@$(CC) $(CFLAGS) -c $< -o $@         // değişiklikleri uygula ve eski hedefe tekrar compile et.
+
+all:	$(NAME)
+
+$(NAME):	$(OBJ)
+			@make -C $(LIBFT)              // libft yi compile et
+			@cp libft/libft.a .           // libft.a yı kopyala
+			@mv libft.a $(NAME)          // libft.a yı libftprint.a anın yanına move et
+			@$(AR) $(NAME) $(OBJ)
+
+clean:
+			@$(RM) $(OBJ)
+			@make clean -C $(LIBFT)
+
+fclean:	clean
+			@$(RM) $(NAME)
+			@$(RM) $(LIBFT)/libft.a
+
+re:	fclean all
+
+.PHONY:	all clean fclean re
+
+
+
+//cp copy
+//mv rename files or moves them to a different directory
+//$@ kuralın hedefinin dosya adı. Hedef bir arşiv üyesiyse arşiv dosyasının adı $@ olur.Birden çok hedef varsa kural tarifinin çalıştırılmasına neden olan hedefin adıdır.
+//$< ilk ön koşulun adı.Hedef, tarifini örtük bir kuraldan aldıysa, bu örtük kuralın eklediği ilk ön koşul olacaktır.
+//-o file dosyasını ön koşullardan daha eski olsa bile, dosyadaki değişiklikler nedeniyle hiçbir şeyi yeniden yapma. Aslında dosya çok eski olarak kabul edilir ve kuralları göz ardı edilir. -o = old
+//-c = change
